@@ -7,11 +7,13 @@ import {
     UpdateDateColumn, 
     OneToOne,
     JoinColumn,
+    OneToMany,
 } from "typeorm";
 
 import bcrypt from 'bcryptjs';
 import { Profile } from "./Profile";
 import { ROLE } from '../constants';
+import { Post } from "./Post";
 
 
 @Entity({'name': 'users'})
@@ -38,6 +40,9 @@ export class User extends BaseEntity {
     @Column({ length: 200})
     password!: string;
 
+    @Column({default: 'Acrive'})
+    status!: string;
+
     @Column({ default: ROLE.SUBSCRIBER})
     role!: string;
 
@@ -50,6 +55,9 @@ export class User extends BaseEntity {
     @OneToOne(() => Profile, profile => profile.user)
     @JoinColumn()
     profile!: Promise<Profile>;
+
+    @OneToMany(() => Post, post => post.user)
+    posts!: Post[];
 
 
     // Create User

@@ -12,9 +12,10 @@ import cors from 'cors';
 import {createConnection, Connection} from "typeorm";
 import ConnectionOptions from './ormconfig';
 import {apiErrorHandler} from './middlewares/ApiErrorHandler';
+import cookieParser from 'cookie-parser'
 import authRoutes from './routes/authRoutes'
 import userRoutes from './routes/userRoutes'
-import cookieParser from 'cookie-parser'
+import categoryRoutes from './routes/categoryRoutes'
 
 
 const app: Application = express()
@@ -53,6 +54,8 @@ export const startServer = async () => {
     app.use(`/${API_VERSION}/auth`, authRoutes);
     // users routes
     app.use(`/${API_VERSION}/users`, userRoutes);
+    // Category routes
+    app.use(`/${API_VERSION}/categories`, categoryRoutes);
 
     // Handle the api errors
     app.use(apiErrorHandler);
