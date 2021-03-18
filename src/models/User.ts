@@ -14,6 +14,7 @@ import bcrypt from 'bcryptjs';
 import { Profile } from "./Profile";
 import { ROLE } from '../constants';
 import { Post } from "./Post";
+import { Comment } from "./Comment";
 
 
 @Entity({'name': 'users'})
@@ -60,6 +61,9 @@ export class User extends BaseEntity {
     @JoinColumn()
     posts!: Promise<Post[]>;
 
+    @OneToMany(() => Comment, comment => comment.user)
+    @JoinColumn()
+    comments!: Promise<Comment[]>;
 
     // Create User
     async createUser(userPaylaod: any): Promise<User> {

@@ -5,9 +5,12 @@ import {
     Column, 
     CreateDateColumn, 
     UpdateDateColumn, 
-    ManyToOne
+    ManyToOne,
+    OneToMany,
+    JoinColumn
 } from "typeorm";
 import { Category } from "./Category";
+import { Comment } from "./Comment";
 import {User} from './User';
 
 
@@ -48,6 +51,10 @@ export class Post extends BaseEntity {
 
     @ManyToOne(() => Category, category => category.posts)
     category!: Promise<Category>;
+
+    @OneToMany(() => Comment, comment => comment.post)
+    @JoinColumn()
+    comments!: Promise<Comment[]>;
 
 
     // Create Category

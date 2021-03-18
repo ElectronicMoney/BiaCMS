@@ -7,10 +7,13 @@ import { v4 as uuidv4 } from 'uuid';
 import { PostController } from '../controllers/PostController';
 import {checkFileExtention} from '../utils/helpers';
 import {PostValidation} from '../validations/PostValidation';
+import {CommentValidation} from '../validations/CommentValidation';
+import { CommentController } from '../controllers/CommentController';
 
 
-// Create the Instance of UserController
-const postController = new PostController()
+// Create the Instance of Controllers
+const postController   = new PostController()
+const commentController = new CommentController()
 
 const postRoutes = Router()
 
@@ -67,6 +70,38 @@ postRoutes.get('/:id', auth, async (req: Request, res: Response, next: NextFunct
 postRoutes.delete('/:id', auth, async (req: Request, res: Response, next: NextFunction) => {
     res.status(204).send(await postController.deletePost(req, res, next))
 });
+
+// Create Comment Route
+postRoutes.post('/:postId/comments', CommentValidation, auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await commentController.createComment(req, res, next))
+});
+
+// Get Comments Route
+postRoutes.get('/:postId/comments', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await commentController.getComments(req, res, next))
+});
+
+// Get Comment Route
+postRoutes.get('/:postId/comments/:commentId', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await commentController.getComment(req, res, next))
+});
+
+// Update Comment Route
+postRoutes.put('/:postId/comments/:commentId', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await commentController.updateComment(req, res, next))
+});
+
+// Delete Comment Route
+postRoutes.delete('/:postId/comments/:commentId', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.status(204).send(await commentController.deleteComment(req, res, next))
+});
+
+
+// Upload Comment Media Route
+postRoutes.post('/:postId/comments/uploads', auth, upload.array('mediaUrls', 12), async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await commentController.uploadCommentMedias(req, res, next))
+});
+
 
 export default postRoutes
 

@@ -141,7 +141,7 @@ export class PostController {
                 return;
             }
 
-            return post;
+            return {...post, author: await post.author};
         
           } catch (err) {
             next(ApiError.internalServer(err.message));
