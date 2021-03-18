@@ -174,7 +174,7 @@ export class PostController {
                 this.isAuthorized = true;
            } else if(await req.user.isAuthor()) {
                 //Check if the auth user is the author of the post
-                if(req.user.id  === post.author.id){
+                if(req.user.id  ===  (await post.author).id){
                     this.isAuthorized = true;
                 } 
            } else {
@@ -183,10 +183,10 @@ export class PostController {
 
             //Check if the update permision is true
             if(this.isAuthorized) {
-                if(req.body.firstName){
+                if(req.body.title){
                     postPayload.title = req.body.title
                 }
-                if(req.body.lastName){
+                if(req.body.body){
                     postPayload.body = req.body.body
                 }
                 post = await post.updatePost(req.params.id, postPayload)
@@ -227,7 +227,7 @@ export class PostController {
 
             } else if(await req.user.isAuthor()) {
                 //Check if the auth user is the author of the post
-                if(req.user.id  === post.author.id){
+                if(req.user.id  === (await post.author).id){
                     this.isAuthorized = true;
                 } 
            } else {

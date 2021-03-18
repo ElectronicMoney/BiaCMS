@@ -44,7 +44,7 @@ export class Post extends BaseEntity {
     @ManyToOne(() => User, user => user.posts,
         { onUpdate: 'CASCADE', onDelete: "CASCADE"}
     )
-    author!: User;
+    author!: Promise<User>;
 
     @ManyToOne(() => Category, category => category.posts)
     category!: Category;
@@ -58,6 +58,7 @@ export class Post extends BaseEntity {
         post.title    = postPaylaod.title;
         post.body     = postPaylaod.body;
         post.mediaUrls = postPaylaod.mediaUrls;
+        post.author = postPaylaod.author;
         post.category = postPaylaod.category;
         const newPost = await post.save();
         return newPost; 
@@ -82,11 +83,11 @@ export class Post extends BaseEntity {
 
         const post = await Post.findOne({where: {postId: postId} });
 
-        if(postPayload.name) {
+        if(postPayload.title) {
             post!.title = postPayload.title
         }
 
-        if(postPayload.description) {
+        if(postPayload.body) {
             post!.body  = postPayload.body
         }
         const updatedPost = await post!.save();

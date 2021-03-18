@@ -60,7 +60,7 @@ postRoutes.put('/:id', auth, async (req: Request, res: Response, next: NextFunct
 
 // Get Post Route
 postRoutes.get('/:id', auth, async (req: Request, res: Response, next: NextFunction) => {
-    res.send(await postController.getPosts(req, res, next))
+    res.send(await postController.getPost(req, res, next))
 });
 
 // Get Post Route
