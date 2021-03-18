@@ -30,7 +30,7 @@ export class Category extends BaseEntity{
     updatedAt!: Date;
 
     @OneToMany(() => Post, post => post.category)
-    posts!: Post[];
+    posts!: Promise<Post[]>;
 
 
     // Create Category

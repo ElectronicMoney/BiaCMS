@@ -47,7 +47,7 @@ export class Post extends BaseEntity {
     author!: Promise<User>;
 
     @ManyToOne(() => Category, category => category.posts)
-    category!: Category;
+    category!: Promise<Category>;
 
 
     // Create Category
