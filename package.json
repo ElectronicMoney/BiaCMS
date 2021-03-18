@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ." 
+    "build": "tsc -p ."
   },
   "keywords": [],
   "author": "Emeka Augustine",
@@ -30,6 +30,7 @@
     "yarn": "^1.22.10"
   },
   "devDependencies": {
+    "@types/babel__core": "^7.1.13",
     "@types/bcryptjs": "^2.4.2",
     "@types/cookie-parser": "^1.4.2",
     "@types/cors": "^2.8.10",

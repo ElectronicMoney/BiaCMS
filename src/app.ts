@@ -16,6 +16,7 @@ import cookieParser from 'cookie-parser'
 import authRoutes from './routes/authRoutes'
 import userRoutes from './routes/userRoutes'
 import categoryRoutes from './routes/categoryRoutes'
+import postRoutes from './routes/postRoutes'
 
 
 const app: Application = express()
@@ -56,6 +57,8 @@ export const startServer = async () => {
     app.use(`/${API_VERSION}/users`, userRoutes);
     // Category routes
     app.use(`/${API_VERSION}/categories`, categoryRoutes);
+    // Post Routes
+    app.use(`/${API_VERSION}/posts`, postRoutes);
 
     // Handle the api errors
     app.use(apiErrorHandler);

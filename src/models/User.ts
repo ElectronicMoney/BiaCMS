@@ -56,8 +56,9 @@ export class User extends BaseEntity {
     @JoinColumn()
     profile!: Promise<Profile>;
 
-    @OneToMany(() => Post, post => post.user)
-    posts!: Post[];
+    @OneToMany(() => Post, post => post.author)
+    @JoinColumn()
+    posts!: Promise<Post[]>;
 
 
     // Create User
@@ -144,6 +145,11 @@ export class User extends BaseEntity {
        return  await this.role === ROLE.ADMIN ?  true: false;
     }
 
+    // Check if User Role is Administrator
+    async isAuthor() {
+        return  await this.role === ROLE.AUTHOR ?  true: false;
+    }
+     
 
     // Check if User Role is Editor
     async isEditor() {
