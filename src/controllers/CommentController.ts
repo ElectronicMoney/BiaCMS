@@ -86,41 +86,9 @@ export class CommentController {
     
     // Get All Comments
     async getComments(req: Request, res: Response, next: NextFunction) {
-        
         try {
-            const comments = await this.comment.getComments()
-
-            if (!comments) {
-                next(ApiError.notFound('No Comment Found!'));
-                return;
-            } 
-
-            let replies: any[] = []
-            // Get the comment reply and the user that made the reply
-            const getCommentReplies = async (commentReplies: any) => {
-                if (commentReplies.length > 0) {
-                    return []
-                }
-                for(let commentReply of commentReplies) {
-                    replies.push({
-                        ...commentReply, 
-                        user: await commentReply.user.profile
-                    });
-                }
-                return replies
-            }
-
-            // Loop through the comments to attach the user that made each comment
-            for(let comment of comments) {
-                let commentReplies = await comment.commentReplies
-                this.postComments.push({
-                    ...comment,
-                    replies: await getCommentReplies(commentReplies),
-                    user: await (await comment.user).profile
-                });
-            }
-            // Return comments
-            return this.postComments
+            // Get 
+            return await this.post.getPostComments(req.params.postId)
         } catch(err){
             next(ApiError.internalServer(err.message));
             return
