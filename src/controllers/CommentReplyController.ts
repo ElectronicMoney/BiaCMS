@@ -4,24 +4,24 @@ import { v4 as uuidv4 } from 'uuid';
 import {ApiError} from '../errors/ApiError'
 import {API_URL} from '../config';
 import { validateRequestPayload } from '../validations';
-import { Post } from '../models/Post';
 import { Comment } from '../models/Comment';
+import { CommentReply } from '../models/CommentReply';
 
 
-export class CommentController {
+export class CommentReplyController {
     // Declear the properies here
 
     isAuthorized: boolean;
     user: User;
-    post: Post;
     comment: Comment;
+    commentReply: CommentReply;
     postComments: any[]
 
     constructor() {
         this.isAuthorized = false;
         this.user = new User()
-        this.post = new Post()
         this.comment = new Comment()
+        this.commentReply = new CommentReply()
         this.postComments = []
     }
 
@@ -38,7 +38,7 @@ export class CommentController {
             }
 
             // Get the user object
-            const post  = await this.post.getPost(req.params.postId)
+            const comment  = await this.comment.getComment(req.params.commentId)
 
             // Get the media names if it is not empty
             if(req.body.mediaMetadata) {
@@ -50,14 +50,15 @@ export class CommentController {
             }
 
             const commentPayload = {
-                commentId: uuidv4(),
+                commentReplyId: uuidv4(),
                 body:   req.body.body,
                 mediaUrls: mediaUrls.toString(), 
                 user: req.user,
-                post: post
+                comment: comment
             } 
+
             // Return comment
-            return await this.comment.createComment(commentPayload) 
+            return await this.commentReply.createCommentReply(commentPayload) 
 
         } catch(err){
             next(ApiError.internalServer(err.message));
@@ -88,35 +89,17 @@ export class CommentController {
     async getComments(req: Request, res: Response, next: NextFunction) {
         
         try {
-            const comments = await this.comment.getComments()
+            const comments = await this.commentReply.getCommentsReply()
 
             if (!comments) {
                 next(ApiError.notFound('No Comment Found!'));
                 return;
             } 
-
-            let replies: any[] = []
-            // Get the comment reply and the user that made the reply
-            const getCommentReplies = async (commentReplies: any) => {
-                if (commentReplies.length > 0) {
-                    return []
-                }
-                for(let commentReply of commentReplies) {
-                    replies.push({
-                        ...commentReply, 
-                        user: await commentReply.user.profile
-                    });
-                }
-                return replies
-            }
-
             // Loop through the comments to attach the user that made each comment
             for(let comment of comments) {
-                let commentReplies = await comment.commentReplies
                 this.postComments.push({
                     ...comment,
-                    replies: await getCommentReplies(commentReplies),
-                    user: await (await comment.user).profile
+                    user: await comment.user
                 });
             }
             // Return comments
@@ -132,7 +115,7 @@ export class CommentController {
     async getComment(req: Request, res: Response, next: NextFunction) {
         try {
             // Get the user object
-            const comment  = await this.comment.getComment(req.params.id)
+            const comment  = await this.commentReply.getCommentReply(req.params.id)
             // Check if we have user
             if(!comment){
                 next(ApiError.notFound('No Comment Found for the given comment Id!'));
@@ -160,7 +143,7 @@ export class CommentController {
                 return;
             }
             // Get the comment usings its id
-            let comment = await this.comment.getComment(req.params.commentId)
+            let comment = await this.commentReply.getCommentReply(req.params.commentId)
              // Check if we have comment
              if(!comment){
                 next(ApiError.notFound('No Comment Found for the given comment Id!'));
@@ -178,7 +161,7 @@ export class CommentController {
                 if(req.body.body){
                     commentPayload.body = req.body.body
                 }
-                comment = await comment.updateComment(req.params.commentId, commentPayload)
+                comment = await comment.updateCommentReply(req.params.commentId, commentPayload)
                 // Return User
                 return {...comment, user: await comment.user}
             } else {
@@ -202,7 +185,7 @@ export class CommentController {
                 return;
             }
             // Get the comment usings its id
-            let comment = await this.comment.getComment(req.params.commentId)
+            let comment = await this.commentReply.getCommentReply(req.params.commentId)
             // Check if we have comment
             if(!comment){
                 next(ApiError.notFound('No Comment Found for the given comment Id!'));
@@ -222,7 +205,7 @@ export class CommentController {
 
             //Check if the update permision is true
             if(this.isAuthorized) {
-                await comment.deleteComment(req.params.commentId)
+                await comment.deleteCommentReply(req.params.commentId)
                 // return null
                 return null
             } else {

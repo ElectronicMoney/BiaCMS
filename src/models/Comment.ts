@@ -5,8 +5,11 @@ import {
     Column, 
     CreateDateColumn, 
     UpdateDateColumn, 
-    ManyToOne
+    ManyToOne,
+    JoinColumn,
+    OneToMany
 } from "typeorm";
+import { CommentReply } from "./CommentReply";
 import { Post } from "./Post";
 import {User} from './User';
 
@@ -32,6 +35,9 @@ export class Comment extends BaseEntity {
     @Column({default: 0})
     totalLike!: number;
 
+    @Column({default: false})
+    hasReply!: boolean;
+
     @CreateDateColumn()
     createdAt!: Date;
 
@@ -48,6 +54,9 @@ export class Comment extends BaseEntity {
     )
     post!: Promise<Post>;
 
+    @OneToMany(() => CommentReply, commentReply => commentReply.comment)
+    @JoinColumn()
+    commentReplies!: Promise<CommentReply[]>;
 
 
     // Create Category

@@ -11,6 +11,7 @@ import {
 } from "typeorm";
 import { Category } from "./Category";
 import { Comment } from "./Comment";
+import { CommentReply } from "./CommentReply";
 import {User} from './User';
 
 
@@ -106,6 +107,82 @@ export class Post extends BaseEntity {
         const post = await Post.findOne({where: {postId: postId} });
         const deletedPost = await post!.remove();
         return deletedPost
+    }
+
+    // Get All Comments
+    async  getPostComments(postId:string) {
+
+        let postComments: any[] = []
+
+        //get post
+        let post = await this.getPost(postId);
+        let comments = await post.comments
+
+        for(let comment of comments) {
+
+            if(comment.hasReply) {
+                const commentReplies = await comment.commentReplies
+                let replies: any[] = []
+                // get the author for each comment reply
+                for(let reply of commentReplies) {
+                    const user = await reply.user
+                    replies.push({
+                        commentReplyIf: reply.commentReplyId,
+                        body: reply.body,
+                        mediaUrls: reply.mediaUrls,
+                        status: reply.status,
+                        totalLike: reply.totalLike,
+                        createdAt: reply.createdAt,
+                        updatedAt: reply.updatedAt,
+                        commentReplyUser: {
+                            userId: user.userId,
+                            name: `${user.firstName} ${user.lastName}`,
+                            avatarUrl: (await user.profile).avatarUrl
+                        }
+                    })
+                }
+
+                postComments.push({
+                    commentId: comment.commentId,
+                    body: comment.body,
+                    mediaUrls: comment.mediaUrls,
+                    status: comment.status,
+                    totalLike: comment.totalLike,
+                    hasReply: comment.hasReply,
+                    createdAt: comment.createdAt,
+                    updatedAt: comment.updatedAt,
+
+                    commentUser: {
+                        userId: (await comment.user).userId,
+                        name: `${(await comment.user).firstName} ${(await comment.user).lastName}`,
+                        avatarUrl:  (await (await comment.user).profile).avatarUrl
+                    },
+
+                    commentReplies: replies
+                })
+            } else {
+                postComments.push({
+                    commentId: comment.commentId,
+                    body: comment.body,
+                    mediaUrls: comment.mediaUrls,
+                    status: comment.status,
+                    totalLike: comment.totalLike,
+                    hasReply: comment.hasReply,
+                    createdAt: comment.createdAt,
+                    updatedAt: comment.updatedAt,
+
+                    commentUser: {
+                        userId: (await comment.user).userId,
+                        name: `${(await comment.user).firstName} ${(await comment.user).lastName}`,
+                        avatarUrl:  (await (await comment.user).profile).avatarUrl
+                    },
+
+                    commentReplies: []
+                })
+            }
+        };
+
+        return postComments
     }
 
 }

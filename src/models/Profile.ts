@@ -25,6 +25,9 @@ export class Profile extends BaseEntity {
     @Column({ default:'avatar.png'})
     avatarUrl!: string;
 
+    @Column('text', {default: null})
+    about!: string
+
     @CreateDateColumn()
     createdAt!: Date;
 

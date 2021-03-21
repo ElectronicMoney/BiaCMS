@@ -140,8 +140,25 @@ export class PostController {
                 next(ApiError.notFound('No Post Found for the given post Id!'));
                 return;
             }
+            const author = await post.author
+            return {
+                postid: post.postId,
+                title: post.title,
+                body: post.body,
+                totalLike: post.totalLike,
+                status: post.status,
+                createdAt: post.createdAt,
+                updatedAt: post.updatedAt,
 
-            return {...post, author: await post.author};
+                author: {
+                    authorId: author.userId,
+                    name: `${author.firstName} ${author.lastName}`,
+                    avatarUrl: (await author.profile).avatarUrl,
+                    aboutAuthor: (await author.profile).about
+                }, 
+
+                comments: await post.getPostComments(post.postId)
+            };
         
           } catch (err) {
             next(ApiError.internalServer(err.message));
