@@ -185,4 +185,14 @@ export class Post extends BaseEntity {
         return postComments
     }
 
+    // Get Posts By Category
+    async getPostsByCategory(categoryId: string){
+        // get the category uing it id
+        let category = new Category()
+        category = await category.getCategory(categoryId);
+        if(!category){
+            return null
+        }
+        return await category.posts
+    }
 }

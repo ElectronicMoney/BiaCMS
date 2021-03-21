@@ -59,6 +59,11 @@ postRoutes.get('/', auth, async (req: Request, res: Response, next: NextFunction
     res.send(await postController.getPosts(req, res, next))
 });
 
+// Get Posts By Category Route
+postRoutes.get('/categories/:categoryId', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await postController.getPostsByCategory(req, res, next))
+});
+
 // Update Post Route
 postRoutes.put('/:id', auth, async (req: Request, res: Response, next: NextFunction) => {
     res.send(await postController.updatePost(req, res, next))

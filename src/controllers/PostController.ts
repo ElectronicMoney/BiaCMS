@@ -129,6 +129,24 @@ export class PostController {
         }
     }
 
+    // Get All Posts
+    async getPostsByCategory(req: Request, res: Response, next: NextFunction) {
+    
+        try {
+             // Get the user object
+             const posts  = await this.post.getPostsByCategory(req.params.categoryId)
+
+            if (!posts) {
+                next(ApiError.notFound('No Post Found!'));
+                return;
+            } 
+            // Return posts
+            return posts
+        } catch(err){
+            next(ApiError.internalServer(err.message));
+            return
+        }
+    }
 
     // Get Post
     async getPost(req: Request, res: Response, next: NextFunction) {
@@ -141,6 +159,7 @@ export class PostController {
                 return;
             }
             const author = await post.author
+            const postCatgoery = await post.category
             return {
                 postid: post.postId,
                 title: post.title,
@@ -149,6 +168,11 @@ export class PostController {
                 status: post.status,
                 createdAt: post.createdAt,
                 updatedAt: post.updatedAt,
+
+                potCategory: {
+                    categoryId: postCatgoery.categoryId,
+                    name: postCatgoery.name
+                },
 
                 author: {
                     authorId: author.userId,
