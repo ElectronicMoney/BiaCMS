@@ -5,9 +5,12 @@ import {
     Column, 
     CreateDateColumn, 
     UpdateDateColumn, 
-    ManyToOne
+    ManyToOne,
+    OneToMany,
+    JoinColumn
 } from "typeorm";
 import { Comment } from "./Comment";
+import { Like } from "./Like";
 import {User} from './User';
 
 
@@ -47,6 +50,10 @@ export class CommentReply extends BaseEntity {
         { onUpdate: 'CASCADE', onDelete: "CASCADE"}
     )
     comment!: Promise<Comment>;
+
+    @OneToMany(() => Like, like => like.commentReply)
+    @JoinColumn()
+    likes!: Promise<Like[]>;
     
 
     // Create Category

@@ -10,6 +10,7 @@ import {
     OneToMany
 } from "typeorm";
 import { CommentReply } from "./CommentReply";
+import { Like } from "./Like";
 import { Post } from "./Post";
 import {User} from './User';
 
@@ -57,6 +58,10 @@ export class Comment extends BaseEntity {
     @OneToMany(() => CommentReply, commentReply => commentReply.comment)
     @JoinColumn()
     commentReplies!: Promise<CommentReply[]>;
+
+    @OneToMany(() => Like, like => like.comment)
+    @JoinColumn()
+    likes!: Promise<Like[]>;
 
 
     // Create Category

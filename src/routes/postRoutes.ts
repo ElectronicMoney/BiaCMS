@@ -11,12 +11,14 @@ import {CommentValidation} from '../validations/CommentValidation';
 import {CommentReplyValidation} from '../validations/CommentReplyValidation';
 import { CommentController } from '../controllers/CommentController';
 import { CommentReplyController } from '../controllers/CommentReplyController';
+import { LikeController } from '../controllers/LikeController';
 
 
 // Create the Instance of Controllers
 const postController   = new PostController()
 const commentController = new CommentController()
 const commentReplyController = new CommentReplyController()
+const likeController     = new LikeController()
 
 const postRoutes = Router()
 
@@ -139,6 +141,12 @@ postRoutes.delete('/comments/:commentId/replies/:replyId', auth, async (req: Req
 // Upload Comment Media Route
 postRoutes.post('/comments/:commentId/replies/uploads', auth, upload.array('mediaUrls', 12), async (req: Request, res: Response, next: NextFunction) => {
     res.send(await commentReplyController.uploadCommentMedias(req, res, next))
+});
+
+
+// Create Likes Route
+postRoutes.post('/:postId/likes', CommentValidation, auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.send(await likeController.createLike(req, res, next))
 });
 
 

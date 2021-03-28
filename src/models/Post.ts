@@ -12,6 +12,7 @@ import {
 import { Category } from "./Category";
 import { Comment } from "./Comment";
 import { CommentReply } from "./CommentReply";
+import { Like } from "./Like";
 import {User} from './User';
 
 
@@ -56,6 +57,10 @@ export class Post extends BaseEntity {
     @OneToMany(() => Comment, comment => comment.post)
     @JoinColumn()
     comments!: Promise<Comment[]>;
+
+    @OneToMany(() => Like, like => like.post)
+    @JoinColumn()
+    likes!: Promise<Like[]>;
 
 
     // Create Category
@@ -127,7 +132,7 @@ export class Post extends BaseEntity {
                 for(let reply of commentReplies) {
                     const user = await reply.user
                     replies.push({
-                        commentReplyIf: reply.commentReplyId,
+                        commentReplyId: reply.commentReplyId,
                         body: reply.body,
                         mediaUrls: reply.mediaUrls,
                         status: reply.status,

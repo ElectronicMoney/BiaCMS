@@ -15,6 +15,7 @@ import { Profile } from "./Profile";
 import { ROLE } from '../constants';
 import { Post } from "./Post";
 import { Comment } from "./Comment";
+import { Like } from "./Like";
 
 
 @Entity({'name': 'users'})
@@ -64,6 +65,10 @@ export class User extends BaseEntity {
     @OneToMany(() => Comment, comment => comment.user)
     @JoinColumn()
     comments!: Promise<Comment[]>;
+
+    @OneToMany(() => Like, like => like.user)
+    @JoinColumn()
+    likes!: Promise<Like[]>;
 
     // Create User
     async createUser(userPaylaod: any): Promise<User> {
