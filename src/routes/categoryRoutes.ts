@@ -29,8 +29,8 @@ categoryRoutes.put('/:id', auth, async (req: Request, res: Response, next: NextF
 });
 
 // Create User Route
-categoryRoutes.delete('/:id', auth, (req: Request, res: Response, next: NextFunction) => {
-    res.status(204).send(categoryController.deleteCategory(req, res, next))
+categoryRoutes.delete('/:id', auth, async (req: Request, res: Response, next: NextFunction) => {
+    res.status(204).send(await categoryController.deleteCategory(req, res, next))
 });
 
 
